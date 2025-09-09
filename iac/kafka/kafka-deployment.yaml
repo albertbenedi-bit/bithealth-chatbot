@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka
+  namespace: data
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      containers:
+      - name: kafka
+        image: bitnami/kafka:3.4.0-debian-11-r0
+        env:
+        - name: KAFKA_CFG_ENABLE_KRAFT
+          value: "false"
+        - name: KAFKA_CFG_ZOOKEEPER_CONNECT
+          value: zookeeper.data.svc.cluster.local:2181 # previously Zookeeper under general-chatbot-app namespace
+        - name: KAFKA_CFG_LISTENERS
+          value: PLAINTEXT://:9092
+        - name: KAFKA_CFG_ADVERTISED_LISTENERS
+          value: PLAINTEXT://kafka.data.svc.cluster.local:9092
+        - name: KAFKA_CFG_BROKER_ID
+          value: "1"
+        - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
+          value: PLAINTEXT:PLAINTEXT
+        - name: ALLOW_PLAINTEXT_LISTENER
+          value: "yes"
+        ports:
+        - containerPort: 9092
+        volumeMounts:
+        - name: kafka-data
+          mountPath: /bitnami/kafka
+        livenessProbe:
+          tcpSocket:
+            port: 9092
+          initialDelaySeconds: 20 # Wait 20 seconds before the first check
+          periodSeconds: 20
+        readinessProbe:
+          tcpSocket:
+            port: 9092
+          initialDelaySeconds: 10 # Wait 10 seconds before checking
+          periodSeconds: 10
+      volumes:
+      - name: kafka-data
+        persistentVolumeClaim:
+          claimName: kafka-pvc

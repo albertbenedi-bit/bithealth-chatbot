@@ -1,0 +1,22 @@
+# iac/rag-service-2/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rag-service-2-config # Name of this ConfigMap
+  namespace: rag-app # Or your desired namespace (e.g., 'rag-app')
+data:
+  # Add non-sensitive environment variables here
+  EMBEDDING_MODEL_NAME: "all-MiniLM-L6-v2"
+  LLM_MODEL_NAME: "gemini-2.5-flash" # Or "llama2" "gemini-pro" etc.
+  CHUNK_SIZE: "500" # ConfigMap values are strings
+  CHUNK_OVERLAP: "50"
+  RETRIEVAL_K: "5"
+  SEARCH_TYPE: "similarity"
+  COLLECTION_NAME: "chatbot_documents" # This must match the collection_name used in iac/postgres/ingest_data.py
+  # Add URLs or other non-sensitive config
+  RAG_SERVICE_URL: "http://rag-service.rag-app.svc.cluster.local:8000" # Example for Orchestrator
+  # Kafka Configuration
+  KAFKA_BOOTSTRAP_SERVERS: "kafka.data.svc.cluster.local:9092"
+  KAFKA_REQUEST_TOPIC: "general-info-requests"
+  KAFKA_RESPONSE_TOPIC: "general-info-responses"
+  KAFKA_GROUP_ID: "rag_service_group"

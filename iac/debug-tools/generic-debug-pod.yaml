@@ -1,0 +1,43 @@
+# iac/debug-tools/generic-debug-pod.yaml
+# A generic debug pod manifest.
+# Deploy this pod to get an interactive shell inside your Kubernetes cluster
+# with useful networking tools pre-installed.
+#
+# How to use:
+# 1. Build and push the debug image:
+#    cd iac/debug-tools
+#    ./build-image.sh latest localhost:5000 true
+#
+# 2. Deploy the pod:
+#    kubectl apply -f iac/debug-tools/generic-debug-pod.yaml
+#
+# 3. Connect to the pod:
+#    kubectl exec -it -n general-chatbot-app generic-debug-pod -- /bin/bash
+#
+# 4. Clean up when done:
+#    kubectl delete -f iac/debug-tools/generic-debug-pod.yaml
+#
+apiVersion: v1
+kind: Pod
+metadata:
+  name: generic-debug-pod
+  namespace: general-chatbot-app
+  labels:
+    role: debug
+spec:
+  containers:
+  - name: debug-container
+    # Use the custom-built debug image
+    image: localhost:5000/k8s-debug-tools:v1.0.0
+    imagePullPolicy: Always
+    # This keeps the pod running so we can exec into it.
+    command: ["sleep", "infinity"]
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "64Mi"
+      limits:
+        cpu: "200m"
+        memory: "128Mi"
+  # 'Never' ensures the pod doesn't restart if you exit your shell.
+  restartPolicy: Never

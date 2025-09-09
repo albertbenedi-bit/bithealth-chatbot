@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.env
+.env
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+*.log
+
+# Poetry
+poetry.lock
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Docker
+*.pid
+*.db
+*.sqlite3
+docker-compose.override.yml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Kubernetes
+*.yaml~*
+*.yml~*
+
+# Test/coverage
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+
+# Node.js
+node_modules/
+npm-debug.log*
+
+# Vue.js
+/dist/
+/.cache/
+
+# Misc
+*.swp
+*.swo
+*.bak
+*.tmp
+*.orig
+*.old
+
+# Ignore local registry images
+registry/

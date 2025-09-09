@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: appointment-agent-config
+  namespace: general-chatbot-app
+data:
+  # LLM Configuration
+  LLM_MODEL_NAME: "gemini-2.5-flash"
+
+  # Database Configuration
+  DATABASE_URL: "postgresql://postgres:postgres@my-rag-postgres-postgresql.data.svc.cluster.local:5432/rag_db"
+
+  # Kafka Configuration
+  KAFKA_BOOTSTRAP_SERVERS: "kafka.data.svc.cluster.local:9092"
+  KAFKA_REQUEST_TOPIC: "appointment-agent-requests"
+  KAFKA_RESPONSE_TOPIC: "appointment-agent-responses"
+  KAFKA_GROUP_ID: "appointment_agent_group"
+
+  # Appointment Service Configuration
+  MAX_BOOKING_DAYS_AHEAD: "60"
+  MIN_BOOKING_HOURS_NOTICE: "24"
+  WORKING_HOURS_START: "9"
+  WORKING_HOURS_END: "17"
+  APPOINTMENT_DURATION_MINUTES: "30"

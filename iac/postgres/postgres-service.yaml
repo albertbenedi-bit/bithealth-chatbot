@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-rag-postgres-postgresql #postgres-service Match the service name expected by the app
+  labels:
+    app: postgres
+  namespace: data #default
+spec:
+  type: ClusterIP
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
+      protocol: TCP

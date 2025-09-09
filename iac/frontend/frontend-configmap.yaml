@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: general-chatbot-app
+data:
+  # This tells the React app to send API requests to the /api path,
+  # which will be handled by our Nginx proxy.
+  VITE_BACKEND_URL: "/api"
+  VITE_APP_NAME: "PV General Chatbot"
+  VITE_ENABLE_MOCK_AUTH: "true"

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ehr-integration
+  namespace: general-chatbot-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ehr-integration
+  template:
+    metadata:
+      labels:
+        app: ehr-integration
+    spec:
+      containers:
+      - name: ehr-integration
+        image: ehr-integration:latest
+        ports:
+        - containerPort: 8003
+        env:
+        - name: DATABASE_URL
+          value: postgresql://chatbot_user:chatbot_password@postgres:5432/chatbot_db
+        volumeMounts:
+        - name: app-volume
+          mountPath: /app
+      volumes:
+      - name: app-volume
+        hostPath:
+          path: /app/integrations/ehr_integration_service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ehr-integration
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8003
+    targetPort: 8003
+  selector:
+    app: ehr-integration

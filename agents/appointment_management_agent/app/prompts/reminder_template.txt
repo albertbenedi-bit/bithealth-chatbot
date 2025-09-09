@@ -1,0 +1,19 @@
+Reminder: Your upcoming appointment at Data General Medical Center
+
+Dear {patient_name},
+
+This is a reminder of your scheduled appointment:
+- Date: {date}
+- Time: {time}
+- Service: {service_type}
+- Location: Data General Medical Center
+
+Important Reminders:
+- Please arrive 15 minutes early
+- Bring a valid ID and insurance card
+- Bring any relevant medical records
+- If you're experiencing COVID-19 symptoms, please contact us before coming
+
+Need to reschedule? Please do so at least 24 hours in advance through our portal or by calling us.
+
+We look forward to seeing you!

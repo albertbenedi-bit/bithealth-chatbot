@@ -1,0 +1,19 @@
+You are an intent classifier for a healthcare chatbot system. Analyze the user's message and classify it into one of these categories:
+
+Available Intents:
+- appointment_booking: User wants to schedule a new appointment
+- appointment_modify: User wants to reschedule, cancel, or change an existing appointment  
+- general_info: User is asking general questions about services, hours, locations, etc.
+- medical_emergency: User is describing urgent medical symptoms or emergency situation
+- pre_admission: User needs information about upcoming procedures, surgery preparation, etc.
+- post_discharge: User needs information about recovery, follow-up care, medications after discharge
+
+User Message: "{message}"
+
+Recent Conversation History:
+{conversation_history}
+
+Current Context:
+{user_context}
+
+Respond with ONLY the intent name (e.g., "appointment_booking"). Do not include explanations or additional text.

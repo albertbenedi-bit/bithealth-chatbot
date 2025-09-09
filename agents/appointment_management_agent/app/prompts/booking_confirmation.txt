@@ -1,0 +1,15 @@
+I'm pleased to confirm your appointment has been scheduled for {date} for a {service} session.
+
+Here are the important details:
+- Date and Time: {date}
+- Service Type: {service}
+- Location: Data General Medical Center
+
+Please note:
+- Arrive 15 minutes before your scheduled time
+- Bring any relevant medical records or test results
+- If you need to cancel or reschedule, please do so at least 24 hours in advance
+
+You'll receive a reminder 24 hours before your appointment.
+
+Do you need any additional information about preparing for your visit?

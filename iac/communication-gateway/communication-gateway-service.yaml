@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: communication-gateway
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8005
+    targetPort: 8005
+  selector:
+    app: communication-gateway

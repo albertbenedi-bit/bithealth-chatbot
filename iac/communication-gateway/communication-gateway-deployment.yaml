@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: communication-gateway
+  namespace: general-chatbot-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: communication-gateway
+  template:
+    metadata:
+      labels:
+        app: communication-gateway
+    spec:
+      containers:
+      - name: communication-gateway
+        image: communication-gateway:latest
+        ports:
+        - containerPort: 8005
+        env:
+        - name: DATABASE_URL
+          value: postgresql://chatbot_user:chatbot_password@postgres:5432/chatbot_db
+        - name: REDIS_URL
+          value: redis://redis:6379
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: kafka:9092
+        - name: TELEGRAM_BOT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: telegram-bot-token
+              key: TELEGRAM_BOT_TOKEN
+        volumeMounts:
+        - name: app-volume
+          mountPath: /app
+      volumes:
+      - name: app-volume
+        hostPath:
+          path: /app/integrations/communication_gateway_service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: communication-gateway
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8005
+    targetPort: 8005
+  selector:
+    app: communication-gateway

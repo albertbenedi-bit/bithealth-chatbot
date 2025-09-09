@@ -1,0 +1,38 @@
+# Global LLM settings for backend orchestrator
+default_provider: "gemini"
+fallback_provider: "anthropic"
+
+providers:
+  gemini:
+    model: "gemini-2.5-flash"
+    max_tokens: 1000
+    temperature: 0.7
+    timeout: 30
+    retry_attempts: 3
+    
+  anthropic:
+    model: "claude-3-sonnet-20240229"
+    max_tokens: 1000
+    temperature: 0.7
+    timeout: 30
+    retry_attempts: 3
+
+intent_classification:
+  max_tokens: 50
+  temperature: 0.1
+  confidence_threshold: 0.8
+
+response_generation:
+  max_tokens: 500
+  temperature: 0.7
+  
+emergency_detection:
+  keywords:
+    - "emergency"
+    - "urgent"
+    - "chest pain"
+    - "bleeding"
+    - "unconscious"
+    - "difficulty breathing"
+    - "severe pain"
+  escalation_required: true

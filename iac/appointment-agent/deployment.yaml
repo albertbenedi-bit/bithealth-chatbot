@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appointment-agent
+  namespace: general-chatbot-app
+  labels:
+    app: appointment-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: appointment-agent
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: appointment-agent
+    spec:
+      containers:
+      - name: appointment-agent
+        image: localhost:5000/appointment-agent:v1.0.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        
+        # Load environment variables from ConfigMap and Secret
+        envFrom:
+        - configMapRef:
+            name: appointment-agent-config
+        - secretRef:
+            name: appointment-agent-secrets
+
+        # Resource limits and requests
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "512Mi"
+          limits:
+            cpu: "500m"
+            memory: "1Gi"
+
+        # Readiness probe
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 30
+
+        # Liveness probe
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 30
+
+      # Add init container to wait for dependencies
+      initContainers:
+      - name: wait-for-postgres
+        image: busybox
+        command: ['sh', '-c', 'until nc -z my-rag-postgres-postgresql.data.svc.cluster.local 5432; do echo waiting for postgres; sleep 2; done;']
+      - name: wait-for-kafka
+        image: busybox
+        command: ['sh', '-c', 'until nc -z kafka.data.svc.cluster.local 9092; do echo waiting for kafka; sleep 2; done;']

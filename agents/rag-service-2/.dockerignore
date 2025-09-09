@@ -1,0 +1,16 @@
+# Ignore virtual environments
+.venv
+venv/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore test and CI/CD artifacts
+.pytest_cache/
+.coverage
+
+# Ignore local environment files and Git
+.env
+.git
+.gitignore

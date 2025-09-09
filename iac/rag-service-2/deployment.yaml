@@ -1,0 +1,73 @@
+# iac/rag-service/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rag-service-2 # Name of the Deployment
+  namespace: rag-app # Deploy to the application namespace
+  labels:
+    app: rag-service-2 # Label to identify the pods managed by this deployment
+spec:
+  replicas: 1 # Start with 1 replica. Scale this up later.
+  selector:
+    matchLabels:
+      app: rag-service-2 # Selects pods with this label to manage
+  strategy:
+    type: RollingUpdate # Default strategy for zero-downtime updates
+    # Configure minReadySeconds, maxUnavailable, maxSurge if needed
+  template:
+    metadata:
+      labels:
+        app: rag-service-2 # Labels applied to the Pods
+    spec:
+      # imagePullSecrets: # Uncomment and configure if using a private registry
+      # - name: my-private-registry-secret # Name of the docker-registry secret
+
+      containers:
+      - name: rag-service-2 # Name of the container inside the pod
+        image: localhost:5000/rag-service-2:v1.0.0 # !!! REPLACE WITH YOUR IMAGE NAME AND TAG !!!
+        # imagePullPolicy: IfNotPresent # Pull image only if not present (good for local testing)
+        imagePullPolicy: Always # Always pull image (good for ensuring latest version during development)
+
+        ports:
+        - containerPort: 8000 # The port your application listens on (EXPOSE in Dockerfile)
+
+        # Load environment variables from ConfigMap and Secret
+        envFrom:
+        - configMapRef:
+            name: rag-service-2-config # Refers to the ConfigMap created above
+        - secretRef:
+            name: rag-service-secrets # Refers to the Secret created above
+
+        # Define resource requests and limits (CRITICAL for production)
+        # Request specifies minimum resources needed, Limits specify maximum
+        # This helps the K8s scheduler place pods and prevents resource hogging
+        # Start with reasonable values based on observation
+        resources:
+          requests:
+            cpu: "250m" # 250 millicpu (0.25 CPU core)
+            memory: "512Mi" # 512 MiB
+          limits:
+            cpu: "500m" # 500 millicpu (0.5 CPU core) - Prevents a single pod from using too much CPU
+            memory: "1024Mi" # 1 GiB - Pod will be OOMKilled if it exceeds this
+
+        # Define liveness and readiness probes (CRITICAL for reliability)
+        # Liveness probe: Restarts the container if it becomes unresponsive.
+        livenessProbe:
+          httpGet:
+            path: /v1/health # Path to your health check endpoint
+            port: 8000
+          initialDelaySeconds: 180 # Wait 3 minutes before first check to allow for model loading
+          periodSeconds: 15 # Check every 15 seconds
+          timeoutSeconds: 5 # Timeout after 5 seconds
+          failureThreshold: 3 # Restart if probe fails 3 times
+
+        # Readiness probe: Determines if the container is ready to serve traffic.
+        # A pod is not considered ready until this probe succeeds.
+        readinessProbe:
+          httpGet:
+            path: /v1/health # Path to your health check endpoint
+            port: 8000
+          initialDelaySeconds: 120 # Wait 2 minutes before first check
+          periodSeconds: 5 # Check every 5 seconds
+          timeoutSeconds: 3 # Timeout after 3 seconds
+          failureThreshold: 2 # Mark pod as not ready if probe fails 2 times

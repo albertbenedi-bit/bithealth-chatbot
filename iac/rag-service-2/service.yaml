@@ -1,0 +1,15 @@
+# iac/rag-service/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: rag-service-2 # Name of the Service (used for internal DNS)
+  namespace: rag-app # Must be in the same namespace as the Deployment
+spec:
+  selector:
+    app: rag-service-2 # Selects the pods managed by the rag-service Deployment
+  ports:
+  - protocol: TCP
+    port: 8000 # Port the Service exposes
+    targetPort: 8000 # Port the container listens on
+  type: ClusterIP # Makes the service only accessible from within the cluster
+  # Use NodePort or LoadBalancer if you needed external access (not needed for RAG service called by Orchestrator)
